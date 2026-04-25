@@ -2,7 +2,7 @@
 
 A clean Composer package for the [NameSilo API](https://www.namesilo.com/api-reference).
 
-Full documentation is available in [docs/USAGE.md](C:/Users/IPASS%20COMPUTERS.DESKTOP-VI7M6UA/Documents/Codex/2026-04-25/i-want-make-a-nice-php/docs/USAGE.md).
+Full documentation is available in [docs/USAGE.md](/docs/USAGE.md).
 
 ## Features
 
