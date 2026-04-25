@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/xililo/namesilo.svg)](https://packagist.org/packages/xililo/namesilo)
 [![PHP Version](https://img.shields.io/packagist/php-v/xililo/namesilo.svg)](https://packagist.org/packages/xililo/namesilo)
-[![License](https://img.shields.io/packagist/l/xililo/namesilo.svg)](https://packagist.org/packages/xililo/namesilo)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A clean and comprehensive Composer package for the [NameSilo API](https://www.namesilo.com/api-reference).
 
