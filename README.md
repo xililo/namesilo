@@ -1,21 +1,57 @@
-# Xililo NameSilo PHP
+# Xililo NameSilo PHP Client
 
-A clean Composer package for the [NameSilo API](https://www.namesilo.com/api-reference).
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/xililo/namesilo.svg)](https://packagist.org/packages/xililo/namesilo)
+[![PHP Version](https://img.shields.io/packagist/php-v/xililo/namesilo.svg)](https://packagist.org/packages/xililo/namesilo)
+[![License](https://img.shields.io/packagist/l/xililo/namesilo.svg)](https://packagist.org/packages/xililo/namesilo)
 
-Full documentation is available in [docs/USAGE.md](/docs/USAGE.md).
+A clean and comprehensive Composer package for the [NameSilo API](https://www.namesilo.com/api-reference).
+
+This package provides a simple, object-oriented interface to interact with NameSilo's domain registration and management services, including domain operations, DNS management, transfers, and more.
+
+Full documentation is available in [docs/USAGE.md](docs/USAGE.md).
+
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Services](#services)
+  - [Domains](#domains)
+  - [Transfers](#transfers)
+  - [Contacts](#contacts)
+  - [NameServers](#nameservers)
+  - [DNS](#dns)
+  - [Account](#account)
+- [Responses](#responses)
+- [Error Handling](#error-handling)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
-- Domain operations
-- Transfer operations
-- Contact operations
-- NameServer operations
-- DNS operations
-- Account operations
-- JSON-first response parsing
-- Small transport layer for easy testing
+- **Domain Operations**: Check availability, register, renew, transfer domains
+- **DNS Management**: Add, update, delete DNS records
+- **Contact Management**: Manage contact profiles for domain registration
+- **Name Server Operations**: Register and manage custom name servers
+- **Transfer Operations**: Handle domain transfers in and out
+- **Account Management**: Check balances, view orders, add funds
+- **JSON-first Response Parsing**: Consistent API responses
+- **Flexible Transport Layer**: Easy to mock for testing
+- **Exception-based Error Handling**: Clear error reporting
+- **Full API Coverage**: Supports all major NameSilo API endpoints
 
-## Install
+## Requirements
+
+- PHP 8.1 or higher
+- cURL extension
+- JSON extension
+- A valid NameSilo API key
+
+## Installation
+
+Install via Composer:
 
 ```bash
 composer require xililo/namesilo
@@ -33,9 +69,13 @@ use Xililo\Namesilo\ValueObject\DnsRecord;
 
 $client = new NamesiloClient('your-api-key');
 
+// Check domain availability
 $availability = $client->domains()->checkAvailability(['example.com', 'example.net']);
+
+// Get domain information
 $domainInfo = $client->domains()->info('example.com');
 
+// Add a DNS record
 $client->dns()->addRecord('example.com', new DnsRecord([
     'rrtype' => 'A',
     'rrhost' => 'www',
@@ -147,23 +187,57 @@ Every service method returns `Xililo\Namesilo\Response\ApiResponse`.
 ```php
 $response = $client->domains()->info('example.com');
 
-$response->isSuccess();
-$response->code();
-$response->detail();
-$response->data();
-$response->get('expires');
+$response->isSuccess();  // bool
+$response->code();       // string (NameSilo reply code)
+$response->detail();     // string (human-readable message)
+$response->data();       // array (parsed response data)
+$response->get('expires'); // mixed (access specific data key)
 ```
 
-By default, non-success NameSilo reply codes throw `Xililo\Namesilo\Exception\ApiException`.
+## Error Handling
 
-## Notes About Operation Mapping
+By default, non-success NameSilo reply codes throw `Xililo\Namesilo\Exception\ApiException`. You can catch these exceptions to handle API errors gracefully:
 
-Most operation names in this package were verified against NameSilo's official API reference and support index. A few names in the `NameServers` and `Account` areas are based on NameSilo's support article titles and their existing naming pattern because those individual reference pages are harder to access without JavaScript.
+```php
+use Xililo\Namesilo\Exception\ApiException;
 
-That means the package structure is solid, but you should validate the less common operation names against your account before shipping production code around those endpoints.
+try {
+    $client->domains()->register('example.com', 1);
+} catch (ApiException $e) {
+    echo "API Error: " . $e->getMessage();
+    echo "Reply Code: " . $e->getCode();
+}
+```
 
-## Run Tests
+Other exceptions that may be thrown:
+- `InvalidArgumentException`: When invalid arguments are provided
+- `TransportException`: When HTTP transport fails
+- `ResponseParsingException`: When API response cannot be parsed
+
+## Testing
+
+This package includes a comprehensive test suite. To run tests:
 
 ```bash
 composer test
 ```
+
+The package uses a mock transport layer for testing, allowing you to test your integration without making real API calls.
+
+## Notes About Operation Mapping
+
+Most operation names in this package were verified against NameSilo's official API reference and support index. A few names in the `NameServers` and `Account` areas are based on NameSilo's support article titles and their existing naming pattern.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
